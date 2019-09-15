@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 
 // Postgres client setup
 const { Pool } = require('pg');
+
 const pgClient = new Pool({
     user: keys.pgUser,
     host: keys.pgHost,
@@ -37,6 +38,7 @@ const redisPublisher = redisClient.duplicate();
 // Express route handlers
 
 app.get('/', (req, res) => {
+    console.log('received');
     res.send('Hi');
 });
 
@@ -60,11 +62,11 @@ app.post('/values', async (req, res) => {
 
     redisClient.hset('values', index, 'Nothing yet!');
     redisPublisher.publish('insert', index);
-    pgClient.query('INSERT INTO values(numbers) VALUES($1)', [index]);
+    pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
 
     res.send({ working: true });
+});
 
-    app.listen(5000, err => {
-        console.log('Listening')
-    });
+app.listen(5000, err => {
+    console.log('Listening');
 });

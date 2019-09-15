@@ -19,7 +19,7 @@ class Fib extends Component {
     }
 
     async fetchIndices() {
-        const seenIndices = await axios.get('api/values/all');
+        const seenIndices = await axios.get('/api/values/all');
         this.setState({ seenIndices: seenIndices.data });
     }
 
@@ -30,14 +30,13 @@ class Fib extends Component {
 
     renderValues() {
         const entries = [];
-
-        this.state.values.forEach((key) => {
+        for (var key in this.state.values) {
             entries.push(
                 <div key={key}>
-                    For index {key} I calcaulated {this.state.values[key]}
+                    For index {key} I calculated {this.state.values[key]}
                 </div>
             );
-        });
+        }
 
         return entries;
     }
