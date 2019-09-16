@@ -22,4 +22,18 @@ after_success:
   - docker push baktoobasik/multi-server
   - docker push baktoobasik/multi-worker
 
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "multi-docker"
+  env: "MultiDocker-env"
+  bucket_name: elasticbeanstalk-us-east-2-599647887319
+  bucket_path: multi-docker
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key: 
+    secure: "$AWS_SECRET_KEY"
+
 language: generic
