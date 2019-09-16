@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t baktoobasik/react-test -f ./client/Dockerfile.dev ./client
+
+
+script:
+  - docker run -e CI=true baktoobasik/react-test npm test
+
+after_success:
+  - docker build -t baktoobasik/multi-client ./client
+  - docker build -t baktoobasik/multi-nginx ./nginx
+  - docker build -t baktoobasik/multi-server ./server
+  - docker build -t baktoobasik/multi-worker ./worker
+  # Login to docker CLI
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_NAME" --password-stdin
+  # Take these images and push to docker hub
+  - docker push baktoobasik/multi-client
+  - docker push baktoobasik/multi-nginx
+  - docker push baktoobasik/multi-server
+  - docker push baktoobasik/multi-worker
+
+language: generic
